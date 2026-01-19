@@ -1,0 +1,165 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum LevelUser {
+  Admin
+  Owner
+  Kurir
+}
+
+model users {
+  id       BigInt    @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  password String
+  level    LevelUser
+
+  pengirimans pengirimans[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model pelanggans {
+  id             BigInt    @id @default(autoincrement())
+  nama_pelanggan String
+  email          String    @unique
+  password       String
+  tgl_lahir      DateTime?
+  telepon        String?
+  alamat1        String?
+  alamat2        String?
+  alamat3        String?
+  kartu_id       String?
+  foto           String?
+
+  pemesanans pemesanans[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model jenis_pembayarans {
+  id                BigInt @id @default(autoincrement())
+  metode_pembayaran String
+
+  pemesanans               pemesanans[]
+  detail_jenis_pembayarans detail_jenis_pembayarans[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model detail_jenis_pembayarans {
+  id                  BigInt  @id @default(autoincrement())
+  id_jenis_pembayaran BigInt
+  no_rek              String
+  tempat_bayar        String
+  logo                String?
+
+  jenis_pembayaran jenis_pembayarans @relation(fields: [id_jenis_pembayaran], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum JenisPaket {
+  Prasmanan
+  Box
+}
+
+enum KategoriPaket {
+  Pernikahan
+  Selamatan
+  UlangTahun
+  StudyTour
+  Rapat
+}
+
+model pakets {
+  id          BigInt        @id @default(autoincrement())
+  nama_paket  String
+  jenis       JenisPaket
+  kategori    KategoriPaket
+  jumlah_pax  Int
+  harga_paket Int
+  deskripsi   String?
+  foto1       String?
+  foto2       String?
+  foto3       String?
+
+  detail_pemesanans detail_pemesanans[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum StatusPesan {
+  MenungguKonfirmasi
+  SedangDiproses
+  MenungguKurir
+  PesananSelesai
+}
+
+model pemesanans {
+  id             BigInt      @id @default(autoincrement())
+  id_pelanggan   BigInt
+  id_jenis_bayar BigInt
+  no_resi        String      @unique
+  tgl_pesan      DateTime
+  status_pesan   StatusPesan
+  total_bayar    BigInt
+
+  pelanggan         pelanggans          @relation(fields: [id_pelanggan], references: [id])
+  jenis_bayar       jenis_pembayarans   @relation(fields: [id_jenis_bayar], references: [id])
+  detail_pemesanans detail_pemesanans[]
+  pengirimans       pengirimans[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model detail_pemesanans {
+  id           BigInt @id @default(autoincrement())
+  id_pemesanan BigInt
+  id_paket     BigInt
+  subtotal     BigInt
+
+  pemesanan pemesanans @relation(fields: [id_pemesanan], references: [id])
+  paket     pakets     @relation(fields: [id_paket], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum StatusPengiriman {
+  SedangDikirim
+  TibaDiTujuan
+}
+
+model pengirimans {
+  id           BigInt           @id @default(autoincrement())
+  tgl_kirim    DateTime         @default(now())
+  tgl_tiba     DateTime?
+  status_kirim StatusPengiriman @default(SedangDikirim)
+  bukti_foto   String?
+  id_pesan     BigInt
+  id_user      BigInt
+
+  pemesanan pemesanans @relation(fields: [id_pesan], references: [id])
+  user      users      @relation(fields: [id_user], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
