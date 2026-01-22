@@ -16,19 +16,23 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/toggle-mode";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Catering-in Dashboard",
   description: "Admin Dashboard Catering-in",
 };
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 me-4 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -54,7 +58,7 @@ export default function DashboardLayout({
           </div>
           <ModeToggle />
         </header>
-        {children}
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-2">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
