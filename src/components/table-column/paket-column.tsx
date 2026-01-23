@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Eye, Pencil, Trash } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +20,8 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { API_URL } from "@/lib/api";
+import { PaketDetailDrawer } from "./paket-detail-drawer";
+import { useRouter } from "next/navigation";
 
 async function handleDeletePaket(id: string, onSuccess: () => void) {
   try {
@@ -84,9 +86,14 @@ export function paketColumns(
     {
       accessorKey: "kategori",
       header: "Kategori",
-      cell: ({ row }) => (
-        <Badge variant="secondary">{row.getValue("kategori")}</Badge>
-      ),
+      cell: ({ row }) => {
+        const k = row.getValue("kategori") as string;
+        return (
+          <Badge variant="secondary">
+            {k.replace(/([A-Z])/g, " $1").trim()}
+          </Badge>
+        );
+      },
       size: 120,
     },
     {
@@ -126,14 +133,28 @@ export function paketColumns(
       // header: () => <span className="pr-3 text-right">Actions</span>,
       cell: ({ row }) => {
         const paket = row.original;
+        const router = useRouter();
 
         return (
           <div className="flex justify-end gap-2">
-            <Link href={`/dashboard/paket/${paket.id}`}>
-              <Button size="icon" variant="outline">
-                <Eye className="h-4 w-4" />
-              </Button>
-            </Link>
+            <PaketDetailDrawer
+              paket={paket}
+              onEdit={(id) => router.push(`/dashboard/paket/${id}/edit`)}
+              onDelete={async (id) => {
+                try {
+                  const res = await fetch(`${API_URL}/paket/${id}`, {
+                    method: "DELETE",
+                  });
+
+                  if (!res.ok) throw new Error();
+
+                  toast.success("Paket berhasil dihapus");
+                  onDeleteSuccess(id);
+                } catch {
+                  toast.error("Gagal menghapus paket");
+                }
+              }}
+            />
 
             <Link href={`/dashboard/paket/${paket.id}/edit`}>
               <Button size="icon" variant="outline">
@@ -144,7 +165,7 @@ export function paketColumns(
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button size="icon" variant="outline">
-                  <Trash className="h-4 w-4 text-red-500" />
+                  <Trash className="h-4 w-4 text-destructive" />
                 </Button>
               </AlertDialogTrigger>
 
@@ -160,7 +181,7 @@ export function paketColumns(
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
                   <AlertDialogAction
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-red-600 text-white hover:bg-red-700"
                     onClick={() =>
                       handleDeletePaket(paket.id, async () => {
                         await onDeleteSuccess(paket.id);
