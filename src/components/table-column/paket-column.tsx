@@ -175,7 +175,7 @@ export function paketColumns(
                   <AlertDialogDescription>
                     Paket{" "}
                     <span className="font-semibold">{paket.nama_paket}</span>{" "}
-                    akan dihapus permanen.
+                    akan ddihapus secara permanen dan tidak bisa dikembalikan.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

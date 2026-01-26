@@ -117,7 +117,7 @@ export function PaketDetailDrawer({
             </p>
           </div>
 
-          <div className="text-sm leading-relaxed text-muted-foreground">
+          <div className="text-sm leading-relaxed text-muted-foreground -mt-2">
             {paket.deskripsi || (
               <span className="italic">Tidak ada deskripsi</span>
             )}

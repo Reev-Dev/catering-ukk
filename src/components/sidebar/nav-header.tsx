@@ -10,7 +10,7 @@ export function NavHeader() {
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton size="lg" asChild>
-          <a href="/dashboard">
+          <a href="/">
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
               <Handbag className="size-4" />
             </div>
