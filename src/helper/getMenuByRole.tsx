@@ -51,7 +51,7 @@ export function getMenuByRole(role?: string): MenuGroup[] {
         },
         {
           title: "Jenis Pembayaran",
-          url: "/dashboard/pembayaran",
+          url: "/dashboard/jenis-pembayaran",
           icon: CreditCard,
         },
       ],

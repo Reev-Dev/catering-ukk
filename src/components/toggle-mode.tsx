@@ -14,8 +14,6 @@ export function ModeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
-
   // Tentukan mode aktif (kalau theme = "system", pakai systemTheme)
   const currentTheme = theme === "system" ? systemTheme : theme;
 

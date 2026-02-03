@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { AppSidebar } from "@/components/dashboard/sidebar/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,

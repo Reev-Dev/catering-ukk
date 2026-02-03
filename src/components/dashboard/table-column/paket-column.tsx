@@ -1,12 +1,12 @@
 "use client";
 
-import { Paket } from "@/types/paket";
+import { Paket } from "@/types/data/paket";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { toast } from "sonner";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { Pencil, Trash } from "lucide-react";
 import {
   AlertDialog,
@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog";
+} from "../../ui/alert-dialog";
 import { API_URL } from "@/lib/api";
 import { PaketDetailDrawer } from "./paket-detail-drawer";
 import { useRouter } from "next/navigation";
@@ -175,7 +175,7 @@ export function paketColumns(
                   <AlertDialogDescription>
                     Paket{" "}
                     <span className="font-semibold">{paket.nama_paket}</span>{" "}
-                    akan ddihapus secara permanen dan tidak bisa dikembalikan.
+                    akan ddihapus secara permanen dan tidak dapat dikembalikan.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

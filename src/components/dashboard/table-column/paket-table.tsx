@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Paket } from "@/types/paket";
+import { Paket } from "@/types/data/paket";
 import { DataTable } from "@/components/data-table";
 import { paketColumns } from "./paket-column";
 import { API_URL } from "@/lib/api";

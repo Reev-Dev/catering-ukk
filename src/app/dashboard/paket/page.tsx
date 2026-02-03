@@ -1,6 +1,6 @@
-import PaketTable from "@/components/table-column/paket-table";
+import PaketTable from "@/components/dashboard/table-column/paket-table";
 import { Button } from "@/components/ui/button";
-import { Paket } from "@/types/paket";
+import { Paket } from "@/types/data/paket";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 async function getData(): Promise<Paket[]> {

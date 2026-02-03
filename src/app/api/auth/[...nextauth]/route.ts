@@ -7,7 +7,7 @@ import type { Session } from "next-auth"
 
 export const authOptions: NextAuthOptions = {
   session: {
-    strategy: "jwt" as const, // ✅ FIX
+    strategy: "jwt" as const,
   },
 
   providers: [

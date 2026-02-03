@@ -10,31 +10,36 @@ export async function proxy(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  /* ================================
-     1️⃣ Jika SUDAH LOGIN
-     ================================ */
+  const role = token?.role;
+
+  // Redirect authenticated users away from auth pages
   if (token && (pathname === "/login" || pathname === "/register")) {
-    if (token.role === "Pelanggan") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(
+      new URL(role === "Pelanggan" ? "/" : "/dashboard", req.url),
+    );
   }
 
-
-  /* ================================
-     Proteksi admin dashboard
-     ================================ */
+  // Protecting dashboard routes
   if (pathname.startsWith("/dashboard")) {
-    if (!token || (token.role !== "Admin" && token.role !== "Owner")) {
-      return NextResponse.redirect(new URL("/", req.url));
+    const allowedRoles = ["Admin", "Owner", "Kurir"];
+
+    if (!token || !allowedRoles.includes(role as string)) {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
   }
 
-  /* ================================
-     4️⃣ Proteksi kurir
-     ================================ */
-  if (pathname.startsWith("/kurir")) {
-    if (!token || token.role !== "Kurir") {
+  // Protection Cart and Checkout routes
+  if (
+    pathname.startsWith("/pesanan-saya") ||
+    pathname.startsWith("/checkout")
+  ) {
+    // If no token, redirect to login
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    // If role isn't Pelanggan, redirect to unauthorized
+    if (role !== "Pelanggan") {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
   }
@@ -44,10 +49,10 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/register",
     "/login",
+    "/register",
     "/dashboard/:path*",
-    "/admin/:path*",
-    "/kurir/:path*",
+    "/checkout/:path*",
+    "/pesanan-saya/:path*",
   ],
 };
