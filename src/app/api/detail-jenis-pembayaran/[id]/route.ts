@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { deleteFile, saveFile } from "@/lib/upload";
+import { serializeBigInt } from "@/helper/serializeBigInt";
 
 export async function GET(
   _req: Request,
@@ -54,7 +55,7 @@ export async function PUT(
     },
   });
 
-  return NextResponse.json({ ...data, id: data.id.toString() });
+  return NextResponse.json(serializeBigInt(data), { status: 201 });
 }
 
 export async function DELETE(

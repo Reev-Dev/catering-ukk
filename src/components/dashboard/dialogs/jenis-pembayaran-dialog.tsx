@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api";
 import { JenisPembayaran } from "@/types/data/pembayaran";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import clsx from "clsx";
 
 export default function JenisPembayaranDialog({
   open,
@@ -22,8 +25,14 @@ export default function JenisPembayaranDialog({
   selected: JenisPembayaran | null;
   onSuccess: () => void;
 }) {
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
+    setErrors({});
+
     const formData = new FormData(e.currentTarget);
 
     try {
@@ -38,7 +47,11 @@ export default function JenisPembayaranDialog({
         body: formData,
       });
 
-      if (!res.ok) throw new Error();
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw data;
+      }
 
       toast.success(
         selected
@@ -48,13 +61,26 @@ export default function JenisPembayaranDialog({
 
       onOpenChange(false);
       onSuccess();
-    } catch {
-      toast.error("Gagal menyimpan jenis pembayaran");
+    } catch (err: any) {
+      if (err?.fields) {
+        setErrors(err.fields);
+      }
+      toast.error(err?.message || "Gagal menyimpan jenis pembayaran");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) {
+          setErrors({});
+        }
+        onOpenChange(v);
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -63,16 +89,24 @@ export default function JenisPembayaranDialog({
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="space-y-4">
-          <input
-            name="metode_pembayaran"
-            placeholder="Contoh: Transfer, E-Wallet"
-            defaultValue={selected?.metode_pembayaran ?? ""}
-            required
-            className="w-full rounded-md border px-3 py-2 text-sm"
-          />
+          <div className="space-y-1">
+            <Input
+              type="text"
+              name="metode_pembayaran"
+              placeholder="Contoh: Transfer, E-Wallet"
+              defaultValue={selected?.metode_pembayaran ?? ""}
+              className={clsx(
+                "w-full rounded-md border px-3 py-2 text-sm",
+                errors.metode_pembayaran && "border-red-500",
+              )}
+            />
+            {errors.metode_pembayaran && (
+              <p className="text-xs text-red-500">{errors.metode_pembayaran}</p>
+            )}
+          </div>
 
-          <Button type="submit" className="w-full">
-            Simpan
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Menyimpan..." : "Simpan"}
           </Button>
         </form>
       </DialogContent>

@@ -27,12 +27,6 @@ export default async function DetailJenisPembayaranPage({
         <h1 className="text-2xl font-bold">
           Detail – {data.metode_pembayaran}
         </h1>
-
-        <Button asChild size="sm">
-          <Link href={`/dashboard/jenis-pembayaran/${id}/detail/add`}>
-            Tambah Detail
-          </Link>
-        </Button>
       </div>
 
       <DetailJenisPembayaranTable
