@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { formatRupiah } from "@/lib/formatter";
 import Image from "next/image";
 
 export function PaketDetail({ paket }: { paket: any }) {
@@ -8,12 +9,12 @@ export function PaketDetail({ paket }: { paket: any }) {
     <div className="grid grid-cols-2 gap-12">
       {/* IMAGE */}
       <div className="space-y-4">
-        <img
-          src={paket.foto || "https://placehold.co/600x400"}
+        <Image
+          src={paket.foto1 || "https://placehold.co/600x400"}
           alt={paket.nama_paket}
-          width={600}
+          width={400}
           height={400}
-          className="rounded-xl object-cover"
+          className="rounded-xs object-cover"
         />
       </div>
 
@@ -29,7 +30,7 @@ export function PaketDetail({ paket }: { paket: any }) {
         <p className="text-muted-foreground">{paket.deskripsi}</p>
 
         <div className="text-2xl font-bold">
-          Rp {paket.harga_paket.toLocaleString()}
+          {formatRupiah(paket.harga_paket)} / pax
         </div>
 
         <Button size="lg" className="w-full">

@@ -5,6 +5,7 @@ import { PaketCard } from "./paket-card";
 import { PaketFilters } from "./paket-filters";
 import { toast } from "sonner";
 import { KATEGORI_PAKET } from "@/constants/paket-enum";
+import { PaketSkeleton } from "./paket-skeleton";
 
 export function PaketList() {
   const [pakets, setPakets] = useState<any[]>([]);
@@ -13,11 +14,16 @@ export function PaketList() {
   const [jenis, setJenis] = useState("all");
   const [kategori, setKategori] = useState("all");
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetch("/api/paket")
       .then((res) => res.json())
-      .then(setPakets)
-      .catch(() => toast.error("Gagal memuat data paket"));
+      .then((data) => {
+        setPakets(data);
+      })
+      .catch(() => toast.error("Gagal memuat data paket"))
+      .finally(() => setLoading(false));
   }, []);
 
   const filtered = useMemo(() => {
@@ -50,12 +56,12 @@ export function PaketList() {
       </div>
 
       <div className="grid grid-cols-4 gap-6">
-        {filtered.map((paket) => (
-          <PaketCard key={paket.id} paket={paket} />
-        ))}
+        {loading
+          ? Array.from({ length: 8 }).map((_, i) => <PaketSkeleton key={i} />)
+          : filtered.map((paket) => <PaketCard key={paket.id} paket={paket} />)}
       </div>
 
-      {filtered.length === 0 && (
+      {!loading && filtered.length === 0 && (
         <p className="mt-10 text-center text-muted-foreground">
           Paket tidak ditemukan
         </p>

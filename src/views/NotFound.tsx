@@ -7,7 +7,7 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <div className="text-center">
+    <div className="flex flex-col items-center justify-center py-12 text-center">
       <p className="text-base font-semibold ">404</p>
       <h1 className="mt-4 text-5xl font-semibold tracking-tight text-balance sm:text-7xl">
         Page not found
