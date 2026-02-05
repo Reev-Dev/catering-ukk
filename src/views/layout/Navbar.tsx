@@ -10,7 +10,7 @@ export default async function Navbar() {
   const role = session?.user?.role;
 
   return (
-    <header className="border-b px-6 py-6">
+    <header className="bg-accent shadow-xl px-6 py-6 sticky top-0 left-0 right-0 z-50">
       <div className="mx-auto flex max-w-5xl w-full items-center justify-between">
         <Link href="/" className="flex items-center gap-3 text-2xl font-bold">
           <Image src="/logo.ico" alt="logo" width={30} height={30} />
