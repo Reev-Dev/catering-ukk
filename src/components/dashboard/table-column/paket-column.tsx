@@ -71,7 +71,7 @@ export function paketColumns(
             </div>
 
             <div className="flex flex-col">
-              <span className="font-medium leading-tight">
+              <span className="font-medium leading-tight max-w-65 truncate">
                 {paket.nama_paket}
               </span>
               <span className="text-xs text-muted-foreground max-w-65 truncate">

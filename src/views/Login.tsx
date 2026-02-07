@@ -53,7 +53,7 @@ export function LoginForm({
     const session = await getSession();
 
     if (session?.user.role === "Pelanggan") {
-      router.push("/home");
+      router.push("/");
     } else {
       router.push("/dashboard");
     }

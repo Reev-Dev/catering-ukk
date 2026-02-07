@@ -16,7 +16,7 @@ export default function NavbarActions({
       {session ? (
         <>
           {role === "Pelanggan" ? (
-            <Link href="/cart">Keranjang</Link>
+            <Link href="/pesanan-saya">Pesanan Saya</Link>
           ) : (
             <Link href="/dashboard">Dashboard</Link>
           )}

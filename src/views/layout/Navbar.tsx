@@ -18,8 +18,8 @@ export default async function Navbar() {
         </Link>
 
         <nav className="flex items-center gap-6">
-          <Link href="/paket">Paket</Link>
           <ModeToggle />
+          <Link href="/paket">Paket</Link>
           
           <NavbarActions session={session} role={role} />
         </nav>
