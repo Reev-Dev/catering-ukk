@@ -16,7 +16,7 @@ export default function StepSection() {
 function Step({ number, title }: any) {
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white font-bold">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-secondary font-bold">
         {number}
       </div>
       <p className="font-semibold">{title}</p>

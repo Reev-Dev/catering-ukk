@@ -15,6 +15,7 @@ import { getSession, signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -49,6 +50,10 @@ export function LoginForm({
       setError("Email atau password salah");
       return;
     }
+
+    toast.success("Login Berhasil", {
+      description: "Selamat datang kembali!",
+    });
 
     const session = await getSession();
 

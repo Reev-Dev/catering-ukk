@@ -1,9 +1,9 @@
-import NextAuth, { type NextAuthOptions } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import bcrypt from "bcryptjs"
-import { prisma } from "@/lib/prisma"
-import type { JWT } from "next-auth/jwt"
-import type { Session } from "next-auth"
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
+import type { JWT } from "next-auth/jwt";
+import type { Session } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        if (!credentials?.email || !credentials?.password) return null;
 
         // cek user admin / owner / kurir
         const user =
@@ -28,23 +28,21 @@ export const authOptions: NextAuthOptions = {
           })) ??
           (await prisma.pelanggans.findUnique({
             where: { email: credentials.email },
-          }))
+          }));
 
-        if (!user) return null
+        if (!user) return null;
 
-        const valid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
+        const valid = await bcrypt.compare(credentials.password, user.password);
 
-        if (!valid) return null
+        if (!valid) return null;
 
         return {
           id: user.id.toString(),
           email: user.email,
           role: "level" in user ? user.level : "Pelanggan",
           name: "name" in user ? user.name : user.nama_pelanggan,
-        }
+          image: "foto" in user ? user.foto : null,
+        };
       },
     }),
   ],
@@ -53,37 +51,65 @@ export const authOptions: NextAuthOptions = {
     async jwt({
       token,
       user,
+      trigger,
     }: {
-      token: JWT
-      user?: any
+      token: JWT;
+      user?: any;
+      trigger?: string;
     }): Promise<JWT> {
       if (user) {
-        token.id = user.id
-        token.role = user.role
+        token.id = user.id;
+        token.role = user.role;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image ?? null;
       }
-      return token
+      if (trigger === "update") {
+        if (token.role === "Pelanggan") {
+          const pelanggan = await prisma.pelanggans.findUnique({
+            where: { id: BigInt(token.id as string) },
+          });
+
+          if (pelanggan) {
+            token.name = pelanggan.nama_pelanggan;
+            token.image = pelanggan.foto ?? null;
+          }
+        } else {
+          const userDb = await prisma.users.findUnique({
+            where: { id: BigInt(token.id as string) },
+          });
+
+          if (userDb) {
+            token.name = userDb.name;
+          }
+        }
+      }
+      return token;
     },
 
     async session({
       session,
       token,
     }: {
-      session: Session
-      token: JWT
+      session: Session;
+      token: JWT;
     }): Promise<Session> {
       if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as string
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.image = token.image as string | null;
       }
-      return session
+      return session;
     },
   },
 
   pages: {
     signIn: "/login",
   },
-}
+};
 
-const handler = NextAuth(authOptions)
+const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };

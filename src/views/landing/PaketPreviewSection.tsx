@@ -39,7 +39,7 @@ export default function PaketPreviewSection() {
               <Image
                 src={
                   data.foto1 ||
-                  "https://dummyimage.com/600/placeholder-image.png"
+                  "https://placehold.co/400x400/jpg"
                 }
                 alt={`${data.nama_paket}`}
                 className="size-full object-cover transition-all duration-500 group-hover:scale-105"
