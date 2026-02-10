@@ -1,153 +1,159 @@
 "use client";
 
-import { TimelineItem } from "@/components/timeline";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { EditIcon } from "lucide-react";
-import Link from "next/link";
-type ProfileFormuProps = {
-  user: any;
+  getProfileById,
+  getAlamatByUserId,
+  updateProfile,
+  updateAlamat,
+} from "@/app/actions/profile";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ImageUpload from "@/components/image-upload";
+import { FileWithPreview } from "@/hooks/use-file-upload";
+import { DatePicker } from "@/components/date-picker";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
+
+type Alamat = {
+  alamat1?: string;
+  alamat2?: string;
+  alamat3?: string;
 };
 
-export function ProfileForm({ user }: ProfileFormuProps) {
-  const initial =
-    user?.nama_pelanggan
-      ?.split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((word: string[]) => word[0].toUpperCase())
-      .join("") || "?";
+export default function EditProfilePage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const [alamat, setAlamat] = useState<Alamat | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasFetched, setHasFetched] = useState(false);
+
+  useEffect(() => {
+    if (!session?.user?.id || hasFetched) return;
+
+    async function fetchData() {
+      try {
+        setLoading(true);
+
+        const userId = BigInt(session!.user.id);
+
+        const alamatData = await getAlamatByUserId(userId);
+        setAlamat(alamatData as Alamat);
+
+        setHasFetched(true);
+      } catch (err) {
+        toast.error("Gagal mengambil data alamat");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [session, hasFetched]);
+
+  const { update } = useSession();
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    await updateAlamat(formData);
+    await update();
+
+    toast.success("Alamat berhasil diperbarui");
+    router.push("/profile");
+    router.refresh();
+  }
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner className="size-12" />
+      </div>
+    );
 
   return (
-    <>
-      <div className="flex flex-col gap-4">
-        <Card className="relative pt-0 pb-3 gap-3">
-          <div
-            className="relative z-10 w-full h-16 rounded-t-xs"
-            style={{
-              background:
-                "linear-gradient(90deg, #f07a88 10%, #9b8de0 50%, #5bc0eb 90%)",
-            }}
-          />
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <Avatar className="h-26 w-26 rounded-xs -mt-12 z-20 border-6 border-white dark:border-zinc-900">
-                <AvatarImage
-                  src={user.foto || undefined}
-                  alt={user.nama_pelanggan || ""}
-                />
-                <AvatarFallback className="rounded-xs bg-primary text-secondary text-3xl">
-                  {initial}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid">
-                <CardTitle className="text-xl font-semibold">
-                  {user.nama_pelanggan}
-                </CardTitle>
-                <CardDescription>Pelanggan</CardDescription>
+    <div className="mx-auto max-w-5xl px-6 py-6">
+      <Card className="gap-3">
+        <CardHeader className="flex justify-between items-center">
+          <CardTitle>Edit Alamat</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={onSubmit}>
+            <div className="flex gap-4">
+              <div className="flex flex-col w-full space-y-3">
+                <div className="grid gap-4">
+                  {/* ALAMAT 1 */}
+                  <div className="grid">
+                    <Label htmlFor="alamat1" className="mb-2">
+                      Alamat 1
+                    </Label>
+                    <Textarea
+                      id="alamat1"
+                      name="alamat1"
+                      placeholder="Alamat 1"
+                      defaultValue={alamat?.alamat1 ?? ""}
+                      disabled={loading}
+                      className="resize-none"
+                    />
+                  </div>
+
+                  {/* Alamat 2 */}
+                  <div className="grid">
+                    <Label htmlFor="alamat2" className="mb-2">
+                      Alamat 2
+                    </Label>
+                    <Textarea
+                      id="alamat2"
+                      name="alamat2"
+                      placeholder="Alamat 2"
+                      defaultValue={alamat?.alamat2 ?? ""}
+                      disabled={loading}
+                      className="resize-none"
+                    />
+                  </div>
+
+                  {/* Alamat 3 */}
+                  <div className="grid">
+                    <Label htmlFor="alamat3" className="mb-2">
+                      Alamat 3
+                    </Label>
+                    <Textarea
+                      id="alamat3"
+                      name="alamat3"
+                      placeholder="Alamat 3"
+                      defaultValue={alamat?.alamat3 ?? ""}
+                      disabled={loading}
+                      className="resize-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end mt-auto gap-2">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => router.back()}
+                  >
+                    Batal
+                  </Button>
+                  <Button type="submit">Simpan</Button>
+                </div>
               </div>
             </div>
-            <CardAction className="mt-auto pb-2">
-              <Link href="/profile/edit">
-                <Button variant="default" className="rounded-xs" size="sm">
-                  <EditIcon className="h-4 w-4" />
-                  Edit Profile
-                </Button>
-              </Link>
-            </CardAction>
-          </CardHeader>
-        </Card>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-1 flex flex-col gap-4">
-            <Card className="gap-3">
-              <CardHeader>
-                <CardTitle className="text-xs font-normal opacity-60">
-                  ABOUT
-                </CardTitle>
-                <CardDescription className="flex flex-col gap-1">
-                  <h5>
-                    <span className="font-medium">Nama: </span>
-                    {user.nama_pelanggan}
-                  </h5>
-                  <h5>
-                    <span className="font-medium">Tanggal Lahir: </span>
-                    {user.tgl_lahir
-                      ? new Date(user.tgl_lahir).toLocaleDateString("id-ID")
-                      : "-"}
-                  </h5>
-                  <h5>
-                    <span className="font-medium">No. Telepon: </span>
-                    {user.telepon || "-"}
-                  </h5>
-                  <h5>
-                    <span className="font-medium">No. Kartu (NIK): </span>
-                    {user.kartu_id || "-"}
-                  </h5>
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className="gap-3">
-              <CardFooter className="grid items-center">
-                <Button>Reset Password</Button>
-              </CardFooter>
-            </Card>
-          </div>
-          <div className="col-span-2">
-            <Card className="gap-1 rounded-xs">
-              <CardHeader>
-                <CardTitle className="text-xs font-normal opacity-60">
-                  ALAMAT (Maks. 3 Alamat)
-                </CardTitle>
-                <CardAction className="mt-auto">
-                  <Link href="/profile/alamat/edit">
-                    <Button variant="default" className="rounded-xs" size="sm">
-                      Edit Alamat
-                    </Button>
-                  </Link>
-                </CardAction>
-              </CardHeader>
-              <CardContent>
-                <div className="relative ml-3">
-                  <div className="absolute top-3 bottom-0 left-0 border-l-[1.5px]" />
-                  <TimelineItem
-                    title="Alamat 1"
-                    description={
-                      user.alamat1 || (
-                        <span className="italic ">Belum ada alamat</span>
-                      )
-                    }
-                  />
-                  <TimelineItem
-                    title="Alamat 2"
-                    description={
-                      user.alamat2 || (
-                        <span className="italic ">Belum ada alamat</span>
-                      )
-                    }
-                  />
-                  <TimelineItem
-                    title="Alamat 3"
-                    description={
-                      user.alamat3 || (
-                        <span className="italic ">Belum ada alamat</span>
-                      )
-                    }
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

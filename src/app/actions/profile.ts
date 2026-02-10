@@ -72,3 +72,23 @@ export async function updateProfile(data: FormData) {
     },
   });
 }
+
+export async function updateAlamat(data: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error("Unauthorized");
+
+  const id = BigInt(session.user.id);
+
+  const alamat1 = data.get("alamat1") as string;
+  const alamat2 = data.get("alamat2") as string;
+  const alamat3 = data.get("alamat3") as string;
+
+  await prisma.pelanggans.update({
+    where: { id },
+    data: {
+      alamat1,
+      alamat2,
+      alamat3,
+    },
+  });
+}
