@@ -19,7 +19,6 @@ export function TabDetailPesanan({ paket, jumlah, setJumlah, onNext }: any) {
         <Input
           type="number"
           min={1}
-          max={paket.jumlah_pax}
           value={jumlah}
           onChange={(e) => setJumlah(Number(e.target.value))}
           className="w-fit"

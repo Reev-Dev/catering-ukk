@@ -1,3 +1,5 @@
+import { DetailPemesanan } from "./pemesanan";
+
 export type Paket = {
   id: string;
   nama_paket: string;
@@ -9,4 +11,5 @@ export type Paket = {
   foto1?: string;
   foto2?: string;
   foto3?: string;
+  detail_pemesanans: DetailPemesanan[];
 };

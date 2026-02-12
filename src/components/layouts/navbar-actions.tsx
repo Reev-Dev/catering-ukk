@@ -27,7 +27,6 @@ export default function NavbarActions({
   // Pelanggan
   if (role === "Pelanggan") {
     const pelanggan = session.user;
-    console.log(pelanggan);
 
     return (
       <ProfileMenu

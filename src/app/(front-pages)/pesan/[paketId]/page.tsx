@@ -1,55 +1,46 @@
-"use client";
-
-import { notFound, useParams, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { PesanForm } from "@/components/landing/pesan/pesan-form";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
+import {
+  getAlamatPelanggan,
+  getJenisPembayaran,
+  getPaketById,
+  getPelangganById,
+} from "@/app/actions/pemesanan";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function PesanPage() {
-  const router = useRouter();
-  const params = useParams<{ paketId: string }>();
+export default async function PesanPage({
+  params,
+}: {
+  params: Promise<{ paketId?: string }>;
+}) {
+  const { paketId } = await params;
 
-  const [pelanggan, setPelanggan] = useState<any>(null);
-  const [alamatList, setAlamatList] = useState<any[]>([]);
-  const [metodePembayaran, setMetodePembayaran] = useState<any[]>([]);
+  if (!paketId) {
+    notFound();
+  }
 
-  const [paket, setPaket] = useState<any>([]);
-  const [loading, setLoading] = useState(true);
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) notFound();
 
-  useEffect(() => {
-    Promise.all([
-      fetch(`/api/paket/${params.paketId}`).then((r) => r.json()),
-      fetch(`/api/pelanggan/me`).then((r) => r.json()),
-      fetch(`/api/jenis-pembayaran`).then((r) => r.json()),
-    ])
-      .then(([paket, pelanggan, pembayaran]) => {
-        setPaket(paket);
-        setPelanggan(pelanggan);
-        setMetodePembayaran(pembayaran);
-      })
-      .catch(() => toast.error("Gagal memuat data"))
-      .finally(() => setLoading(false));
-  }, [params.paketId]);
+  const userId = BigInt(session.user.id);
 
-  if (!paket) return notFound();
+  const paketIdBigInt = BigInt(paketId!);
 
-  if (loading)
-    return (
-      <div className="max-w-3xl mx-auto py-6">
-        <Card>
-          <div className="animate-pulse p-4 space-y-4">
-            <div className="h-40 w-full rounded-md bg-muted" />
-          </div>
-        </Card>
-      </div>
-    );
+  const [paket, pelanggan, alamat, metodePembayaran] = await Promise.all([
+    getPaketById(paketIdBigInt),
+    getPelangganById(userId),
+    getAlamatPelanggan(userId),
+    getJenisPembayaran(),
+  ]);
+
+  if (!paket || !pelanggan) notFound();
 
   return (
     <PesanForm
       paket={paket}
       pelanggan={pelanggan}
-      alamatList={pelanggan.alamat}
+      alamatList={alamat}
       metodePembayaran={metodePembayaran}
     />
   );

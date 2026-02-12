@@ -20,8 +20,8 @@ export function PesanForm({
 }: {
   paket: any;
   pelanggan: any;
-  alamatList: any[];
-  metodePembayaran: any[];
+  alamatList: any;
+  metodePembayaran: any;
 }) {
   const [activeTab, setActiveTab] = useState("detail");
   const [jumlah, setJumlah] = useState(1);
@@ -38,6 +38,7 @@ export function PesanForm({
     startTransition(async () => {
       await pesanAction({
         paketId: paket.id,
+        pelangganId: pelanggan.id,
         jumlah,
         alamatId: BigInt(alamatId),
         jenisPembayaranId: BigInt(pembayaranId),

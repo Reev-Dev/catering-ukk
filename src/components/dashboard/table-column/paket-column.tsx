@@ -55,11 +55,12 @@ export function paketColumns(
 
         return (
           <div className="flex items-center gap-3">
-            <div className="relative h-10 w-10 overflow-hidden rounded-md bg-muted">
+            <div className="relative h-10 w-10 overflow-hidden rounded-xs bg-muted">
               {paket.foto1 ? (
                 <Image
                   src={paket.foto1}
                   alt={paket.nama_paket}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   fill
                   className="object-cover"
                 />

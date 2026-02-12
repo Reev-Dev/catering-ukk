@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import { cache, use } from "react";
+import { cache } from "react";
 import { deleteFile, saveFile } from "@/lib/upload";
 
 export const getProfileById = cache(async (userId: bigint) => {

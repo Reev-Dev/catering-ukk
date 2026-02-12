@@ -15,27 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Undo2 } from "lucide-react";
 import ImageUpload from "@/components/image-upload";
 import { FileWithPreview } from "@/hooks/use-file-upload";
-import clsx from "clsx";
 import { DatePicker } from "@/components/date-picker";
 import { Spinner } from "@/components/ui/spinner";
-
-type Profile = {
-  nama_pelanggan: string;
-  telepon?: string;
-  tgl_lahir?: string;
-  kartu_id?: string;
-  foto?: string;
-};
-
-type Alamat = {
-  alamat1?: string;
-  alamat2?: string;
-  alamat3?: string;
-};
+import { Alamat, Profile } from "@/types/data/profile";
 
 export default function EditProfilePage() {
   const { data: session } = useSession();
