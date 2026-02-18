@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../ui/alert-dialog";
+import Link from "next/link";
 
 type Paket = {
   id: string;
@@ -47,13 +48,11 @@ type Paket = {
 
 interface PaketDetailDrawerProps {
   paket: Paket;
-  onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
 export function PaketDetailDrawer({
   paket,
-  onEdit,
   onDelete,
 }: PaketDetailDrawerProps) {
   const images = [paket.foto1, paket.foto2, paket.foto3].filter(
@@ -136,15 +135,13 @@ export function PaketDetailDrawer({
         </div>
 
         {/* FOOTER */}
-        <DrawerFooter className="flex-row gap-2">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() => onEdit(paket.id)}
-          >
-            <Pencil className="h-4 w-4 mr-2" />
-            Edit
-          </Button>
+        <DrawerFooter className="grid grid-cols-2 gap-2">
+          <Link href={`/dashboard/paket/${paket.id}/edit`} className="flex-1">
+            <Button variant="outline" className="w-full">
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
+          </Link>
 
           {/* 🔥 DELETE WITH ALERT */}
           <AlertDialog>

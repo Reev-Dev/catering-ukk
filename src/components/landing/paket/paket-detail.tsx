@@ -67,7 +67,7 @@ export function PaketDetail({ paket }: { paket: any }) {
             </div>
             <h1 className="text-4xl font-bold">{paket.nama_paket}</h1>
             <h5 className="text-md font-medium">
-              Stok: <span className="font-bold">{paket.jumlah_pax}</span>
+              Pax: <span className="font-bold">{paket.jumlah_pax}</span>
             </h5>
           </div>
 

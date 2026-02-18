@@ -1,4 +1,5 @@
 import { Paket } from "./paket";
+import { Pelanggan } from "./pelanggan";
 import { Pengiriman } from "./pengiriman";
 
 export type Pemesanan = {
@@ -15,6 +16,7 @@ export type Pemesanan = {
   total_bayar: string;
   pengirimans: Pengiriman[];
   detail_pemesanans: DetailPemesanan[];
+  pelanggan: Pelanggan;
 };
 
 export type DetailPemesanan = {

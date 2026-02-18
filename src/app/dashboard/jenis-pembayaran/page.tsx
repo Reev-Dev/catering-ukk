@@ -1,11 +1,8 @@
 import JenisPembayaranTable from "@/components/dashboard/table-column/jenis-pembayaran/jenis-pembayaran-table";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
+import { API_URL } from "@/lib/api";
 
 async function getData() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const res = await fetch(`${apiUrl}/jenis-pembayaran`, {
+  const res = await fetch(`${API_URL}/jenis-pembayaran`, {
     cache: "no-store",
   });
 

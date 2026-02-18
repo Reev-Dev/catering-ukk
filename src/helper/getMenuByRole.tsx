@@ -5,11 +5,13 @@ import {
   Users,
   Truck,
   UserCog,
+  ClipboardCopy,
 } from "lucide-react";
 import { MenuGroup } from "@/types/menu";
 
 export function getMenuByRole(role?: string): MenuGroup[] {
   if (role === "Kurir") {
+    // KURIR
     return [
       {
         label: "Main Menu",
@@ -27,9 +29,28 @@ export function getMenuByRole(role?: string): MenuGroup[] {
         ],
       },
     ];
+  } else if (role === "Owner") {
+    // OWNER
+    return [
+      {
+        label: "Main Menu",
+        items: [
+          {
+            title: "Dashboard",
+            url: "/dashboard",
+            icon: LayoutDashboard,
+          },
+          {
+            title: "Laporan Penjualan",
+            url: "/dashboard/laporan-penjualan",
+            icon: CreditCard,
+          },
+        ],
+      },
+    ];
   }
 
-  // ADMIN / OWNER
+  // ADMIN
   return [
     {
       label: "Main Menu",
@@ -38,6 +59,16 @@ export function getMenuByRole(role?: string): MenuGroup[] {
           title: "Dashboard",
           url: "/dashboard",
           icon: LayoutDashboard,
+        },
+      ],
+    },
+    {
+      label: "Manajemen Pemesanan",
+      items: [
+        {
+          title: "Pemesanan",
+          url: "/dashboard/pemesanan",
+          icon: ClipboardCopy,
         },
       ],
     },
@@ -57,12 +88,12 @@ export function getMenuByRole(role?: string): MenuGroup[] {
       ],
     },
     {
-      label: "Human Resource",
+      label: "Manajemen User",
       items: [
         {
-          title: "Admin & Owner",
-          url: "/dashboard/admin",
-          icon: UserCog,
+          title: "User",
+          url: "/dashboard/user",
+          icon: Users,
         },
         {
           title: "Kurir",
@@ -70,9 +101,9 @@ export function getMenuByRole(role?: string): MenuGroup[] {
           icon: Truck,
         },
         {
-          title: "User",
-          url: "/dashboard/user",
-          icon: Users,
+          title: "Admin",
+          url: "/dashboard/admin",
+          icon: UserCog,
         },
       ],
     },

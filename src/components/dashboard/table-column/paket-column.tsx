@@ -3,7 +3,6 @@
 import { Paket } from "@/types/data/paket";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { toast } from "sonner";
 import { Badge } from "../../ui/badge";
 import Link from "next/link";
 import { Button } from "../../ui/button";
@@ -19,27 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../ui/alert-dialog";
-import { API_URL } from "@/lib/api";
 import { PaketDetailDrawer } from "./paket-detail-drawer";
 import { useRouter } from "next/navigation";
-
-async function handleDeletePaket(id: string, onSuccess: () => void) {
-  try {
-    const res = await fetch(`${API_URL}/paket/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!res.ok) {
-      throw new Error("Gagal menghapus paket");
-    }
-
-    toast.success("Paket berhasil dihapus");
-    onSuccess();
-  } catch (err: any) {
-    console.error(err);
-    toast.error("Gagal menghapus paket");
-  }
-}
 
 export function paketColumns(
   onDeleteSuccess: (id: string) => void,
@@ -140,21 +120,7 @@ export function paketColumns(
           <div className="flex justify-end gap-2">
             <PaketDetailDrawer
               paket={paket}
-              onEdit={(id) => router.push(`/dashboard/paket/${id}/edit`)}
-              onDelete={async (id) => {
-                try {
-                  const res = await fetch(`${API_URL}/paket/${id}`, {
-                    method: "DELETE",
-                  });
-
-                  if (!res.ok) throw new Error();
-
-                  toast.success("Paket berhasil dihapus");
-                  onDeleteSuccess(id);
-                } catch {
-                  toast.error("Gagal menghapus paket");
-                }
-              }}
+              onDelete={(id) => onDeleteSuccess(id)}
             />
 
             <Link href={`/dashboard/paket/${paket.id}/edit`}>
@@ -176,18 +142,14 @@ export function paketColumns(
                   <AlertDialogDescription>
                     Paket{" "}
                     <span className="font-semibold">{paket.nama_paket}</span>{" "}
-                    akan ddihapus secara permanen dan tidak dapat dikembalikan.
+                    akan dihapus secara permanen dan tidak dapat dikembalikan.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-red-600 text-white hover:bg-red-700"
-                    onClick={() =>
-                      handleDeletePaket(paket.id, async () => {
-                        await onDeleteSuccess(paket.id);
-                      })
-                    }
+                    onClick={() => onDeleteSuccess(paket.id)}
                   >
                     Hapus
                   </AlertDialogAction>

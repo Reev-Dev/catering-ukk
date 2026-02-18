@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { serializeBigInt } from "@/helper/serializeBigInt";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -16,17 +17,7 @@ export async function GET(req: Request) {
     },
   });
 
-  return NextResponse.json(
-    data.map((d) => ({
-      ...d,
-      id: d.id.toString(),
-      detail_jenis_pembayarans: d.detail_jenis_pembayarans.map((det) => ({
-        ...det,
-        id: det.id.toString(),
-        id_jenis_pembayaran: det.id_jenis_pembayaran.toString(),
-      })),
-    })),
-  );
+  return NextResponse.json(serializeBigInt(data));
 }
 
 export async function POST(req: Request) {

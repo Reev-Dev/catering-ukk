@@ -56,11 +56,9 @@ export function PaketCard({ paket }: { paket: any }) {
           <div className="flex w-full items-end justify-between">
             <div className="font-bold">
               {formatRupiah(paket.harga_paket)}
-              {""}
-              <span className="text-xs font-medium">/pax</span>
             </div>
             <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-              stok {paket.jumlah_pax}
+              {paket.jumlah_pax} pax
             </Badge>
           </div>
         </CardFooter>

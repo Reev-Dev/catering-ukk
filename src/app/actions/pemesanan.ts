@@ -137,3 +137,26 @@ export async function pesanAction(data: {
 
   redirect(`/pesanan-saya`);
 }
+
+export async function approvePemesanan(id: bigint) {
+  await prisma.pemesanans.update({
+    where: { id },
+    data: {
+      status_pesan: "MenungguKurir",
+    },
+  });
+}
+
+export async function assignKurir(pemesananId: bigint, kurirId: bigint) {
+  await prisma.pemesanans.update({
+    where: { id: pemesananId },
+    data: {
+      status_pesan: "SedangDiproses",
+      pengirimans: {
+        create: {
+          id_user: kurirId,
+        },
+      },
+    },
+  });
+}

@@ -140,6 +140,7 @@ export default function EditProfilePage() {
                     <Input
                       id="kartu_id"
                       name="kartu_id"
+                      
                       placeholder="No. Kartu (NIK)"
                       defaultValue={profile?.kartu_id ?? ""}
                       disabled={loading}

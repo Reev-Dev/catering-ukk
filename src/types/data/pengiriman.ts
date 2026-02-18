@@ -1,3 +1,6 @@
+import { Pemesanan } from "./pemesanan";
+import { User } from "./user";
+
 export type Pengiriman = {
   id: string;
   tgl_kirim: string;
@@ -6,4 +9,6 @@ export type Pengiriman = {
   bukti_foto?: string;
   id_pesan: string;
   id_user: string;
+  user: User;
+  pemesanan: Pemesanan;
 };

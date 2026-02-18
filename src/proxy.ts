@@ -31,7 +31,8 @@ export async function proxy(req: NextRequest) {
   // Protection Cart and Checkout routes
   if (
     pathname.startsWith("/pesanan-saya") ||
-    pathname.startsWith("/profile")
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/pesan")
   ) {
     // If no token, redirect to login
     if (!token) {
@@ -54,5 +55,6 @@ export const config = {
     "/dashboard/:path*",
     "/profile/:path*",
     "/pesanan-saya/:path*",
+    "/pesan/:path*",
   ],
 };
