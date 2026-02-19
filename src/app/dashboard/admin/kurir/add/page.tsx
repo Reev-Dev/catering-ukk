@@ -64,7 +64,7 @@ export default function AddKurirPage() {
       }
 
       toast.success("Kurir berhasil ditambahkan");
-      router.push("/dashboard/kurir");
+      router.push("/dashboard/admin/kurir");
     } catch (err: any) {
       if (err?.fields) {
         setErrors(err.fields);

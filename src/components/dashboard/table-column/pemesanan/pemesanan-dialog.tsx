@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Pemesanan } from "@/types/data/pemesanan";
 import { ApproveSection } from "./pemesanan-approve";
 import { AssignKurir } from "./pemesanan-assign";
+import { Badge } from "@/components/ui/badge";
 
 export function DetailPemesananDialog({ pemesanan }: { pemesanan: Pemesanan }) {
   const [open, setOpen] = useState(false);
@@ -19,6 +20,7 @@ export function DetailPemesananDialog({ pemesanan }: { pemesanan: Pemesanan }) {
 
   const detail = pemesanan.detail_pemesanans?.[0];
   const paket = detail?.paket;
+  const status = pemesanan.status_pesan.replace(/([A-Z])/g, " $1").trim();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -50,7 +52,14 @@ export function DetailPemesananDialog({ pemesanan }: { pemesanan: Pemesanan }) {
             <b>Total:</b> Rp {pemesanan.total_bayar}
           </p>
           <p>
-            <b>Status:</b> {pemesanan.status_pesan}
+            <b>Status:</b>{" "}
+            {status === "Pesanan Selesai" ? (
+              <Badge variant="success">{status}</Badge>
+            ) : status === "Sedang Diproses" ? (
+              <Badge variant="blue">{status}</Badge>
+            ) : (
+              <Badge variant="orange">{status}</Badge>
+            )}
           </p>
         </div>
 
@@ -58,12 +67,14 @@ export function DetailPemesananDialog({ pemesanan }: { pemesanan: Pemesanan }) {
         <ApproveSection
           pemesananId={pemesananId}
           status={pemesanan.status_pesan}
+          setOpen={setOpen}
         />
 
         {/* SECTION ASSIGN KURIR */}
         <AssignKurir
           pemesananId={pemesananId}
           status={pemesanan.status_pesan}
+          setOpen={setOpen}
         />
       </DialogContent>
     </Dialog>

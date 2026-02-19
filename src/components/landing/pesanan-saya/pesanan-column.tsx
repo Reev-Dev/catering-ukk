@@ -120,10 +120,10 @@ export const pesananColumns: ColumnDef<Pemesanan>[] = [
         <Badge
           variant={
             status === "TibaDiTujuan"
-              ? "default"
+              ? "success"
               : status === "SedangDikirim"
-              ? "secondary"
-              : "outline"
+              ? "blue"
+              : "secondary"
           }
           className="font-medium"
         >

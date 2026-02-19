@@ -1,6 +1,4 @@
-import DetailJenisPembayaranTable from "@/components/dashboard/table-column/jenis-pembayaran/detail/detail-table";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import DetailJenisPembayaranTable from "@/components/dashboard/table-column/jenis-pembayaran/detail/detail-table";;
 
 async function getData(id: string) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;

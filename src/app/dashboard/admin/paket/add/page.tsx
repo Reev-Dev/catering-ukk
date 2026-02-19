@@ -3,20 +3,6 @@
 import GalleryUpload from "@/components/gallery-upload";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { JENIS_PAKET, KATEGORI_PAKET } from "@/constants/paket-enum";
-import { FileWithPreview } from "@/hooks/use-file-upload";
-import { useRouter, useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
 import {
   Field,
   FieldGroup,
@@ -25,117 +11,83 @@ import {
   FieldSeparator,
   FieldSet,
 } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { JENIS_PAKET, KATEGORI_PAKET } from "@/constants/paket-enum";
+import { FileWithPreview } from "@/hooks/use-file-upload";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
-export default function EditPaketPage() {
+export default function AddPaketPage() {
   const router = useRouter();
-  const params = useParams<{ id: string }>();
-
-  const [loading, setLoading] = useState(false);
-  const [galleryFiles, setGalleryFiles] = useState<FileWithPreview[]>([]);
-  const [form, setForm] = useState<any>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [jenis, setJenis] = useState("");
   const [kategori, setKategori] = useState("");
-
-  useEffect(() => {
-    fetch(`/api/paket/${params.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setForm(data);
-        setJenis(data.jenis);
-        setKategori(data.kategori);
-      })
-      .catch(() => toast.error("Gagal mengambil data"));
-  }, [params.id]);
-
-  function mapOldImages(form: any) {
-    const images = [];
-
-    if (form.foto1)
-      images.push({
-        id: "old-1",
-        name: "foto1",
-        size: 0,
-        type: "image/jpeg",
-        url: form.foto1,
-      });
-
-    if (form.foto2)
-      images.push({
-        id: "old-2",
-        name: "foto2",
-        size: 0,
-        type: "image/jpeg",
-        url: form.foto2,
-      });
-
-    if (form.foto3)
-      images.push({
-        id: "old-3",
-        name: "foto3",
-        size: 0,
-        type: "image/jpeg",
-        url: form.foto3,
-      });
-
-    return images;
-  }
+  const [images, setImages] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleFilesChange = useCallback((files: FileWithPreview[]) => {
-    setGalleryFiles(files);
+    setImages(
+      files
+        .map((f) => f.file)
+        .filter((file): file is File => file instanceof File),
+    );
   }, []);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(form: HTMLFormElement) {
     setLoading(true);
     setErrors({});
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
 
-    formData.set("jenis", jenis);
-    formData.set("kategori", kategori);
+    formData.append("jenis", jenis);
+    formData.append("kategori", kategori);
 
-    const keptOldImages = galleryFiles
-      .filter((f) => !(f.file instanceof File))
-      .map((f) => (f.file as any).url);
-
-    formData.append("keptImages", JSON.stringify(keptOldImages));
-
-    galleryFiles.forEach((f, i) => {
-      if (f.file instanceof File) {
-        formData.append(`newImages`, f.file);
-      }
+    images.forEach((file, index) => {
+      formData.append(`foto${index + 1}`, file);
     });
 
     try {
-      const res = await fetch(`/api/paket/${params.id}`, {
-        method: "PUT",
+      const res = await fetch("/api/paket", {
+        method: "POST",
         body: formData,
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        throw data;
+      }
 
-      if (!res.ok) throw data;
-
-      toast.success("Paket berhasil diupdate");
-      router.push("/dashboard/paket");
+      toast.success("Paket berhasil ditambahkan");
+      router.push("/dashboard/admin/paket");
     } catch (err: any) {
       if (err?.fields) {
         setErrors(err.fields);
       }
-      toast.error(err?.message || "Gagal update paket");
+      toast.error(err?.message || "Terjadi kesalahan saat menambah paket");
     } finally {
       setLoading(false);
     }
   }
 
-  if (!form) return <p>Loading...</p>;
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e.currentTarget);
+      }}
+    >
       <div className="flex flex-col gap-2 items-center">
         <div className="flex w-full text-xl font-semibold justify-between">
-          <h1 className="ml-2 mt-auto">Edit Data Paket</h1>
+          <h1 className="ml-2 mt-auto">Tambah Data Paket</h1>
           <div className="flex gap-2 pb-2">
             <Button
               type="button"
@@ -146,7 +98,7 @@ export default function EditPaketPage() {
               <span>Discard</span>
             </Button>
             <Button type="submit" size="sm" disabled={loading}>
-              {loading ? "Updating..." : "Update"}
+              {loading ? "Saving..." : "Save"}
             </Button>
           </div>
         </div>
@@ -167,8 +119,8 @@ export default function EditPaketPage() {
                           Nama Paket
                         </FieldLabel>
                         <Input
+                          id="nama_paket"
                           name="nama_paket"
-                          defaultValue={form.nama_paket}
                           placeholder="Masukkan nama paket"
                           className={errors.nama_paket ? "border-red-500" : ""}
                         />
@@ -186,11 +138,7 @@ export default function EditPaketPage() {
                           >
                             Jenis
                           </FieldLabel>
-                          <Select
-                            name="jenis"
-                            defaultValue={form.jenis}
-                            onValueChange={setJenis}
-                          >
+                          <Select onValueChange={setJenis}>
                             <SelectTrigger
                               size="sm"
                               className={errors.jenis ? "border-red-500" : ""}
@@ -198,13 +146,18 @@ export default function EditPaketPage() {
                               <SelectValue placeholder="Pilih jenis" />
                             </SelectTrigger>
                             <SelectContent>
-                              {JENIS_PAKET.map((j) => (
-                                <SelectItem key={j} value={j}>
-                                  {j}
+                              {JENIS_PAKET.map((item) => (
+                                <SelectItem key={item} value={item}>
+                                  {item}
                                 </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
+                          {errors.jenis && (
+                            <p className="text-xs text-red-500 -mt-2">
+                              {errors.jenis}
+                            </p>
+                          )}
                         </Field>
                         <Field>
                           <FieldLabel
@@ -213,27 +166,28 @@ export default function EditPaketPage() {
                           >
                             Kategori
                           </FieldLabel>
-                          <Select
-                            name="kategori"
-                            defaultValue={form.kategori}
-                            onValueChange={setKategori}
-                          >
+                          <Select onValueChange={setKategori}>
                             <SelectTrigger
                               size="sm"
                               className={
                                 errors.kategori ? "border-red-500" : ""
                               }
                             >
-                              <SelectValue />
+                              <SelectValue placeholder="Pilih kategori" />
                             </SelectTrigger>
                             <SelectContent>
-                              {KATEGORI_PAKET.map((k) => (
-                                <SelectItem key={k} value={k}>
-                                  {k.replace(/([A-Z])/g, " $1").trim()}
+                              {KATEGORI_PAKET.map((item) => (
+                                <SelectItem key={item} value={item}>
+                                  {item.replace(/([A-Z])/g, " $1").trim()}
                                 </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
+                          {errors.kategori && (
+                            <p className="text-xs text-red-500 -mt-2">
+                              {errors.kategori}
+                            </p>
+                          )}
                         </Field>
                       </div>
                       <Field>
@@ -244,9 +198,9 @@ export default function EditPaketPage() {
                           Deskripsi
                         </FieldLabel>
                         <Textarea
+                          id="deskripsi"
                           name="deskripsi"
                           placeholder="Tambahkan deskripsi paket"
-                          defaultValue={form.deskripsi}
                           className="resize-none"
                         />
                       </Field>
@@ -255,11 +209,9 @@ export default function EditPaketPage() {
                 </FieldGroup>
               </CardContent>
             </Card>
-
             <GalleryUpload
               maxFiles={3}
               multiple
-              initialFiles={mapOldImages(form)}
               onFilesChange={handleFilesChange}
             />
           </div>
@@ -279,10 +231,10 @@ export default function EditPaketPage() {
                           Jumlah Pax
                         </FieldLabel>
                         <Input
+                          id="jumlah_pax"
                           name="jumlah_pax"
                           type="number"
                           placeholder="Masukkan jumlah pax"
-                          defaultValue={form.jumlah_pax}
                           className={errors.jumlah_pax ? "border-red-500" : ""}
                         />
                         {errors.jumlah_pax && (
@@ -299,10 +251,10 @@ export default function EditPaketPage() {
                           Harga Paket
                         </FieldLabel>
                         <Input
+                          id="harga_paket"
                           name="harga_paket"
                           type="number"
                           placeholder="Masukkan harga paket"
-                          defaultValue={form.harga_paket}
                           className={errors.harga_paket ? "border-red-500" : ""}
                         />
                         {errors.harga_paket && (

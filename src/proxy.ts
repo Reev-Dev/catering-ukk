@@ -26,6 +26,19 @@ export async function proxy(req: NextRequest) {
     if (!token || !allowedRoles.includes(role as string)) {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
+
+    // Prevent redirect loop
+    if (role === "Admin" && !pathname.startsWith("/dashboard/admin")) {
+      return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+    }
+
+    if (role === "Kurir" && !pathname.startsWith("/dashboard/kurir")) {
+      return NextResponse.redirect(new URL("/dashboard/kurir", req.url));
+    }
+
+    if (role === "Owner" && !pathname.startsWith("/dashboard/owner")) {
+      return NextResponse.redirect(new URL("/dashboard/owner", req.url));
+    }
   }
 
   // Protection Cart and Checkout routes

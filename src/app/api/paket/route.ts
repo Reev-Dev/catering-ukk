@@ -7,7 +7,7 @@ import { JenisPaket, KategoriPaket } from "@prisma/client";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
-  const sortBy = searchParams.get("sortBy") || "created_at";
+  const sortBy = searchParams.get("sortBy") || "updated_at";
   const order = searchParams.get("order") === "asc" ? "asc" : "desc";
 
   const pakets = await prisma.pakets.findMany({

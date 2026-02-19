@@ -7,7 +7,6 @@ import {
 } from "react";
 
 export function TabPembayaran({
-  total,
   metodePembayaran,
   selected,
   onSelect,

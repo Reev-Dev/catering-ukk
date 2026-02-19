@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/helpers";
 import { Pemesanan } from "@/types/data/pemesanan";
 import { ColumnDef } from "@tanstack/react-table";
@@ -61,7 +60,15 @@ export const pemesananColumns: ColumnDef<Pemesanan>[] = [
 
       const label = status ? status.replace(/([A-Z])/g, " $1").trim() : "-";
 
-      return <Badge className="font-medium text-xs" variant={label === "Menunggu Konfirmasi" ? "default" : "outline"}>{label}</Badge>;
+      if (label === "Pesanan Selesai") {
+        return <Badge className="font-medium text-xs" variant="success">{label}</Badge>;
+      } else if (label === "Sedang Diproses") {
+        return <Badge className="font-medium text-xs" variant="blue">{label}</Badge>;
+      } else if (label === "Menunggu Konfirmasi" || label === "Menunggu Kurir") {
+        return <Badge className="font-medium text-xs" variant="orange">{label}</Badge>;
+      }
+
+      return <Badge className="font-medium text-xs" variant={label === "Pesanan Selesai" ? "success" : "blue"}>{label}</Badge>;
     },
     size: 160,
   },

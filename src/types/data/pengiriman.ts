@@ -4,7 +4,7 @@ import { User } from "./user";
 export type Pengiriman = {
   id: string;
   tgl_kirim: string;
-  tgl_tiba?: string;
+  tgl_tiba?: string | null;
   status_kirim: "SedangDikirim" | "TibaDiTujuan";
   bukti_foto?: string;
   id_pesan: string;

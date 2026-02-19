@@ -111,7 +111,7 @@ export function paketColumns(
     },
     {
       id: "actions",
-      // header: () => <span className="pr-3 text-right">Actions</span>,
+      header: () => <span className="pr-3">Actions</span>,
       cell: ({ row }) => {
         const paket = row.original;
         const router = useRouter();
@@ -123,7 +123,7 @@ export function paketColumns(
               onDelete={(id) => onDeleteSuccess(id)}
             />
 
-            <Link href={`/dashboard/paket/${paket.id}/edit`}>
+            <Link href={`/dashboard/admin/paket/${paket.id}/edit`}>
               <Button size="icon" variant="outline">
                 <Pencil className="h-4 w-4" />
               </Button>
@@ -159,7 +159,7 @@ export function paketColumns(
           </div>
         );
       },
-      size: 100,
+      size: 120,
     },
   ];
 }

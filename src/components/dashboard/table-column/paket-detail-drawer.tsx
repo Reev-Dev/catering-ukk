@@ -51,10 +51,7 @@ interface PaketDetailDrawerProps {
   onDelete: (id: string) => void;
 }
 
-export function PaketDetailDrawer({
-  paket,
-  onDelete,
-}: PaketDetailDrawerProps) {
+export function PaketDetailDrawer({ paket, onDelete }: PaketDetailDrawerProps) {
   const images = [paket.foto1, paket.foto2, paket.foto3].filter(
     (img): img is string => Boolean(img),
   );
@@ -136,7 +133,10 @@ export function PaketDetailDrawer({
 
         {/* FOOTER */}
         <DrawerFooter className="grid grid-cols-2 gap-2">
-          <Link href={`/dashboard/paket/${paket.id}/edit`} className="flex-1">
+          <Link
+            href={`/dashboard/admin/paket/${paket.id}/edit`}
+            className="flex-1"
+          >
             <Button variant="outline" className="w-full">
               <Pencil className="h-4 w-4 mr-2" />
               Edit

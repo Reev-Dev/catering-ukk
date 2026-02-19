@@ -33,7 +33,7 @@ export default function kurirColumns(): ColumnDef<User>[] {
           return <span className="font-medium text-xs text-muted-foreground">{status}</span>;
         }
         return (
-          <Badge variant="secondary" className="font-medium">Sedang mengantar ({row.original.pengirimans?.[0].pemesanan?.no_resi})</Badge>
+          <Badge variant="blue" className="font-medium">Sedang melakukan pengiriman</Badge>
         );
       },
     },

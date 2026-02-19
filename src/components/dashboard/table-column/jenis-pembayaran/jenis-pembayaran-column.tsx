@@ -84,7 +84,7 @@ export function jenisPembayaranColumns(
         return (
           <div className="flex justify-end gap-2">
             {/* 🔥 KELOLA DETAIL */}
-            <Link href={`/dashboard/jenis-pembayaran/${data.id}/detail`}>
+            <Link href={`/dashboard/admin/jenis-pembayaran/${data.id}/detail`}>
               <Button size="icon" variant="outline">
                 <List className="h-4 w-4" />
               </Button>

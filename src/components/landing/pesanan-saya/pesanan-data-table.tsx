@@ -45,7 +45,7 @@ export function PesananDataTable<TData, TValue>({
 
   return (
     <div className="flex h-full flex-col justify-between gap-4">
-      <div className="overflow-y-auto rounded-xs border max-h-[calc(100vh-250px)]">
+      <div className="overflow-y-auto rounded-xs border min-h-[calc(100vh-250px)]">
         <Table className="table-fixed w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

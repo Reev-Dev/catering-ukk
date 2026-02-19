@@ -4,7 +4,6 @@ import {
   CreditCard,
   Users,
   Truck,
-  UserCog,
   ClipboardCopy,
 } from "lucide-react";
 import { MenuGroup } from "@/types/menu";
@@ -17,13 +16,8 @@ export function getMenuByRole(role?: string): MenuGroup[] {
         label: "Main Menu",
         items: [
           {
-            title: "Dashboard",
-            url: "/dashboard",
-            icon: LayoutDashboard,
-          },
-          {
-            title: "Pesanan Saya",
-            url: "/dashboard/pengiriman",
+            title: "Dashboard Kurir",
+            url: "/dashboard/kurir",
             icon: Truck,
           },
         ],
@@ -37,75 +31,67 @@ export function getMenuByRole(role?: string): MenuGroup[] {
         items: [
           {
             title: "Dashboard",
-            url: "/dashboard",
+            url: "/dashboard/owner",
             icon: LayoutDashboard,
           },
           {
             title: "Laporan Penjualan",
-            url: "/dashboard/laporan-penjualan",
+            url: "/dashboard/owner/laporan-penjualan",
             icon: CreditCard,
+          },
+        ],
+      },
+    ];
+  } else if (role === "Admin") {
+    // ADMIN
+    return [
+      {
+        label: "Main Menu",
+        items: [
+          {
+            title: "Dashboard",
+            url: "/dashboard/admin",
+            icon: LayoutDashboard,
+          },
+          {
+            title: "Pemesanan",
+            url: "/dashboard/admin/pemesanan",
+            icon: ClipboardCopy,
+          },
+        ],
+      },
+      {
+        label: "Master Data",
+        items: [
+          {
+            title: "Paket",
+            url: "/dashboard/admin/paket",
+            icon: Package,
+          },
+          {
+            title: "Jenis Pembayaran",
+            url: "/dashboard/admin/jenis-pembayaran",
+            icon: CreditCard,
+          },
+        ],
+      },
+      {
+        label: "Manajemen User",
+        items: [
+          {
+            title: "Kurir",
+            url: "/dashboard/admin/kurir",
+            icon: Truck,
+          },
+          {
+            title: "Pelanggan",
+            url: "/dashboard/admin/user",
+            icon: Users,
           },
         ],
       },
     ];
   }
 
-  // ADMIN
-  return [
-    {
-      label: "Main Menu",
-      items: [
-        {
-          title: "Dashboard",
-          url: "/dashboard",
-          icon: LayoutDashboard,
-        },
-      ],
-    },
-    {
-      label: "Manajemen Pemesanan",
-      items: [
-        {
-          title: "Pemesanan",
-          url: "/dashboard/pemesanan",
-          icon: ClipboardCopy,
-        },
-      ],
-    },
-    {
-      label: "Master Data",
-      items: [
-        {
-          title: "Paket",
-          url: "/dashboard/paket",
-          icon: Package,
-        },
-        {
-          title: "Jenis Pembayaran",
-          url: "/dashboard/jenis-pembayaran",
-          icon: CreditCard,
-        },
-      ],
-    },
-    {
-      label: "Manajemen User",
-      items: [
-        {
-          title: "User",
-          url: "/dashboard/user",
-          icon: Users,
-        },
-        {
-          title: "Kurir",
-          url: "/dashboard/kurir",
-          icon: Truck,
-        },
-        {
-          title: "Admin",
-          url: "/dashboard/admin",
-          icon: UserCog,
-        },
-      ],
-    },
-  ];
+  return [];
 }

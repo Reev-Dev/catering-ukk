@@ -1,11 +1,10 @@
-import KurirTable from "@/components/dashboard/table-column/kurir/kurir-table";
-import { Button } from "@/components/ui/button";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import PengirimanTable from "@/components/dashboard/table-column/pengiriman/pengiriman-table";
 import { API_URL } from "@/lib/api";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
+import { getServerSession } from "next-auth";
 
-async function getData() {
-  const res = await fetch(`${API_URL}/kurir`, {
+async function getData(userId: bigint) {
+  const res = await fetch(`${API_URL}/pengiriman/${userId}`, {
     cache: "no-store",
   });
 
@@ -15,27 +14,17 @@ async function getData() {
 }
 
 export default async function KurirPage() {
-  const data = await getData();
+  const session = await getServerSession(authOptions);
+  const userId = BigInt(session!.user.id);
+  const data = await getData(userId);
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Kurir</h1>
-
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-1"
-        >
-          <Link href="/dashboard/kurir/add">
-            <PlusIcon />
-            <span>Add</span>
-          </Link>
-        </Button>
+      <div className="flex justify-start">
+        <h1 className="text-2xl font-bold">Data Pengiriman</h1>
       </div>
 
-      <KurirTable initialData={data} />
+      <PengirimanTable initialData={data} />
     </div>
   );
 }
