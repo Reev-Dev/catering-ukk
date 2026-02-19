@@ -4,13 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { Pengiriman } from "@/types/data/pengiriman";
 import { ColumnDef } from "@tanstack/react-table";
 import { DetailPengirimanDialog } from "./pengiriman-dialog";
+import { formatDate } from "@/lib/helpers";
 
 export function pengirimanColumns(): ColumnDef<Pengiriman>[] {
   return [
     {
       id: "no_resi",
       header: "No Resi",
-      accessorKey: "no_resi",
       cell: ({ row }) => (
         <span className="font-medium text-xs">
           {row.original.pemesanan.no_resi}
@@ -20,7 +20,6 @@ export function pengirimanColumns(): ColumnDef<Pengiriman>[] {
     {
       id: "nama_pelanggan",
       header: "Nama Penerima",
-      accessorKey: "nama_pelanggan",
       cell: ({ row }) => (
         <span className="font-medium text-xs">
           {row.original.pemesanan.pelanggan?.nama_pelanggan}
@@ -30,7 +29,6 @@ export function pengirimanColumns(): ColumnDef<Pengiriman>[] {
     {
       id: "alamat",
       header: "Alamat",
-      accessorKey: "alamat",
       cell: ({ row }) => (
         <span className="font-medium text-xs">
           {row.original.pemesanan.pelanggan?.alamat1}
@@ -53,8 +51,22 @@ export function pengirimanColumns(): ColumnDef<Pengiriman>[] {
           );
         }
 
-        return <Badge variant="blue" className="font-medium text-xs">{label}</Badge>;
+        return (
+          <Badge variant="blue" className="font-medium text-xs">
+            {label}
+          </Badge>
+        );
       },
+    },
+    {
+      id: "tgl_pesan",
+      header: "Tgl Pesan",
+      accessorKey: "tgl_pesan",
+      cell: ({ row }) => (
+        <span className="font-medium text-xs">
+          {formatDate(row.original.pemesanan.tgl_pesan)}
+        </span>
+      ),
     },
     {
       id: "aksi",

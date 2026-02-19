@@ -24,6 +24,9 @@ export async function GET(
         }
       },
     },
+    orderBy: {
+      updated_at: "desc",
+    },
   });
 
   return NextResponse.json(serializeBigInt(data));
