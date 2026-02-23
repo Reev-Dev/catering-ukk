@@ -23,7 +23,7 @@ export function NavMain({ groups }: { groups: MenuGroup[] }) {
           <SidebarMenu>
             {group.items.map((item) => {
               const isActive =
-                item.url === "/dashboard/admin"
+                item.url === "/dashboard/admin" || "/dashboard/owner" || "/dashboard/kurir"
                   ? pathname === item.url
                   : pathname.startsWith(item.url ?? "");
 

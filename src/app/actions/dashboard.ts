@@ -1,11 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-
 export async function getDashboardStats() {
   const totalPemesanan = await prisma.pemesanans.count();
 
-  const totalPendapatan = await prisma.pemesanans.aggregate({
+  const totalPendapatanAgg = await prisma.pemesanans.aggregate({
     _sum: {
       total_bayar: true,
     },
@@ -14,15 +13,34 @@ export async function getDashboardStats() {
     },
   });
 
+  const totalPendapatan = Number(totalPendapatanAgg._sum.total_bayar || 0);
+
   const totalPelanggan = await prisma.pelanggans.count();
 
   const totalPaketAktif = await prisma.pakets.count();
 
+  // Rata-rata omzet = totalPendapatan / jumlah pesanan selesai
+  const totalPesananSelesai = await prisma.pemesanans.count({
+    where: { status_pesan: "PesananSelesai" },
+  });
+
+  const rataRataOmzet =
+    totalPesananSelesai > 0 ? totalPendapatan / totalPesananSelesai : 0;
+
+  // Total pelanggan aktif = pelanggan yang pernah melakukan pemesanan
+  const totalPelangganAktif = await prisma.pemesanans
+    .groupBy({
+      by: ["id_pelanggan"],
+    })
+    .then((res) => res.length);
+
   return {
     totalPemesanan,
-    totalPendapatan: Number(totalPendapatan._sum.total_bayar || 0),
+    totalPendapatan,
     totalPelanggan,
     totalPaketAktif,
+    rataRataOmzet: Math.round(rataRataOmzet),
+    totalPelangganAktif,
   };
 }
 
@@ -74,4 +92,37 @@ export async function getPemesanan() {
       updated_at: "desc",
     },
   });
+}
+
+export async function getMenuTerlaris() {
+  const result = await prisma.$queryRaw<
+    {
+      id_paket: bigint;
+      nama_paket: string;
+      harga_paket: number;
+      total_dipesan: bigint;
+      total_omzet: bigint;
+    }[]
+  >`
+    SELECT 
+      dp.id_paket,
+      pk.nama_paket,
+      pk.harga_paket,
+      SUM(dp.subtotal) as total_dipesan,
+      SUM(dp.subtotal * pk.harga_paket) as total_omzet
+    FROM detail_pemesanans dp
+    JOIN pemesanans p ON p.id = dp.id_pemesanan
+    JOIN pakets pk ON pk.id = dp.id_paket
+    WHERE p.status_pesan = 'PesananSelesai'
+    GROUP BY dp.id_paket, pk.nama_paket, pk.harga_paket
+    ORDER BY total_dipesan DESC
+  `;
+
+  return result.map((item) => ({
+    id: item.id_paket,
+    nama_paket: item.nama_paket,
+    hargaPaket: item.harga_paket,
+    totalDipesan: Number(item.total_dipesan),
+    totalOmzet: Number(item.total_omzet),
+  }));
 }

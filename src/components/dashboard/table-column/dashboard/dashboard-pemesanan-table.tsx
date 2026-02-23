@@ -9,6 +9,11 @@ export default function DashboardPemesananTable({
   initialData: any[];
 }) {
   return (
-    <DataTable columns={dashboardPemesananColumns} data={initialData} initialPageSize={5} loading={false} />
+    <DataTable
+      columns={dashboardPemesananColumns}
+      data={initialData}
+      initialPageSize={5}
+      loading={false}
+    />
   );
 }
