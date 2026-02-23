@@ -3,9 +3,6 @@ import PengirimanTable from "@/components/dashboard/table-column/pengiriman/peng
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { API_URL } from "@/lib/api";
 import { Box, PackageCheck, Van } from "lucide-react";
@@ -37,28 +34,6 @@ export default async function KurirPage() {
 
   return (
     <div className="space-y-3">
-      {/* <Card className="relative flex flex-col pt-0 pb-3 gap-3">
-        <div
-          className="relative z-10 w-full h-8 rounded-t-xs"
-          style={{
-            background:
-              "linear-gradient(90deg, #f07a88 10%, #9b8de0 50%, #5bc0eb 90%)",
-          }}
-        />
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <div className="grid">
-              <CardTitle className="text-xl font-bold">
-                Halo, {session!.user.name}
-              </CardTitle>
-              <CardDescription>
-                Selamat sejahtera untuk kamu yang selalu siap memulai
-                pengantaran
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-      </Card> */}
       <div className="grid grid-cols-3 gap-3">
         <Card className="flex justify-center items-center">
           <CardContent className="flex w-full justify-start gap-4">

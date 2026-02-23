@@ -4,10 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/helpers";
 import { Pemesanan } from "@/types/data/pemesanan";
 import { ColumnDef } from "@tanstack/react-table";
-import { DetailPemesananDialog } from "./pemesanan-dialog";
-import { ClipboardClock } from "lucide-react";
 
-export const pemesananColumns: ColumnDef<Pemesanan>[] = [
+export const dashboardPemesananColumns: ColumnDef<Pemesanan>[] = [
   {
     id: "no_resi",
     header: "No Resi",
@@ -97,41 +95,5 @@ export const pemesananColumns: ColumnDef<Pemesanan>[] = [
       );
     },
     size: 160,
-  },
-  {
-    id: "kurir",
-    header: "Kurir",
-    cell: ({ row }) => {
-      const pengiriman = row.original.pengirimans;
-
-      if (!pengiriman || pengiriman.length === 0) {
-        return (
-          <span className="text-xs text-muted-foreground">Belum dikirim</span>
-        );
-      }
-
-      const kurir = pengiriman[0]?.user?.name;
-
-      return (
-        <span className="font-medium text-xs">
-          {kurir ?? "Belum assign kurir"}
-        </span>
-      );
-    },
-
-    size: 120,
-  },
-  {
-    id: "aksi",
-    header: "Aksi",
-    cell: ({ row }) => {
-      return (
-        <div className="flex gap-2 items-center">
-          {row.original.status_pesan !== "PesananSelesai" && <ClipboardClock />}
-          <DetailPemesananDialog pemesanan={row.original} />
-        </div>
-      );
-    },
-    size: 100,
   },
 ];
