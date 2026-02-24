@@ -77,7 +77,7 @@ export function RegisterForm({
       email: formData.get("email"),
       password: formData.get("password"),
       redirect: true,
-      callbackUrl: "/home",
+      callbackUrl: "/",
     });
   }
 
