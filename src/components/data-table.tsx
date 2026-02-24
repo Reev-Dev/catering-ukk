@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   initialPageSize?: number;
   loading?: boolean;
+  maxHeight?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -48,6 +49,7 @@ export function DataTable<TData, TValue>({
   data,
   initialPageSize = 10,
   loading = false,
+  maxHeight = "max-h-[calc(100vh-250px)]",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState({
@@ -71,7 +73,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex h-auto flex-col justify-between gap-4">
-      <div className="overflow-y-auto rounded-xs border max-h-[calc(100vh-250px)]">
+      <div className="overflow-y-auto rounded-xs border" style={{ maxHeight }}>
         <Table className="table-fixed w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

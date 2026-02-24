@@ -24,7 +24,6 @@ export default function kurirColumns(): ColumnDef<User>[] {
       id: "status",
       header: "Status",
       cell: ({ row }) => {
-        console.log(row.original.pengirimans);
         if (
           !row.original.pengirimans ||
           row.original.pengirimans.length === 0

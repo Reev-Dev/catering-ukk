@@ -43,7 +43,7 @@ export function getMenuByRole(role?: string): MenuGroup[] {
           },
           {
             title: "Monitoring Pesanan",
-            url: "/dashboard/owner/pemesanan",
+            url: "/dashboard/owner/pesanan",
             icon: ChartColumn,
           },
         ],

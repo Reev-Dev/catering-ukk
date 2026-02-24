@@ -4,6 +4,22 @@ import { prisma } from "@/lib/prisma";
 export async function getDashboardStats() {
   const totalPemesanan = await prisma.pemesanans.count();
 
+  const totalPemesananMenunggu = await prisma.pemesanans.count({
+    where: {
+      status_pesan: {
+        in: ["MenungguKonfirmasi", "MenungguKurir"],
+      },
+    },
+  });
+
+  const totalPemesananSedangDiproses = await prisma.pemesanans.count({
+    where: { status_pesan: "SedangDiproses" },
+  });
+
+  const totalPemesananSelesai = await prisma.pemesanans.count({
+    where: { status_pesan: "PesananSelesai" },
+  });
+
   const totalPendapatanAgg = await prisma.pemesanans.aggregate({
     _sum: {
       total_bayar: true,
@@ -36,6 +52,9 @@ export async function getDashboardStats() {
 
   return {
     totalPemesanan,
+    totalPemesananMenunggu,
+    totalPemesananSedangDiproses,
+    totalPemesananSelesai,
     totalPendapatan,
     totalPelanggan,
     totalPaketAktif,

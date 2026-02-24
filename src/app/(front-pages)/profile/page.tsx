@@ -10,7 +10,6 @@ export default async function ProfilePage() {
   const id = BigInt(session.user.id);
 
   const user = await prisma.pelanggans.findUnique({ where: { id } });
-  console.log(user);
 
   return (
     <>
