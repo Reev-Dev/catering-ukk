@@ -23,5 +23,33 @@ export async function getUser() {
     },
   });
 
-  return { totalUser, totalAdmin, totalKurir };
+  const totalKurirAktif = await prisma.users.count({
+    where: {
+      level: "Kurir",
+      pengirimans: {
+        some: {
+          status_kirim: "SedangDikirim",
+        },
+      },
+    },
+  });
+
+  const totalKurirTersedia = await prisma.users.count({
+    where: {
+      level: "Kurir",
+      pengirimans: {
+        none: {
+          status_kirim: "SedangDikirim",
+        },
+      },
+    },
+  });
+
+  return {
+    totalUser,
+    totalAdmin,
+    totalKurir,
+    totalKurirAktif,
+    totalKurirTersedia,
+  };
 }

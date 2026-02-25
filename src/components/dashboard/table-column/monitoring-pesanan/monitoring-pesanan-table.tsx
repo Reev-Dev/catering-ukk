@@ -2,7 +2,8 @@ import { DataTable } from "@/components/data-table";
 import { Pemesanan } from "@/types/data/pemesanan";
 import { monitoringPesananColumns } from "./monitoring-pesanan-column";
 
-export default function PesananTable({
+
+export default function MonitoringPesananTable({
   initialData,
 }: {
   initialData: Pemesanan[];

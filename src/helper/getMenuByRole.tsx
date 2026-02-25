@@ -107,7 +107,7 @@ export function getMenuByRole(role?: string): MenuGroup[] {
           },
           {
             title: "Pelanggan",
-            url: "/dashboard/admin/user",
+            url: "/dashboard/admin/pelanggan",
             icon: Users,
           },
         ],

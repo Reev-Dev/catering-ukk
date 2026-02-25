@@ -11,6 +11,16 @@ export async function getDashboardStats() {
       },
     },
   });
+  const totalPemesananMenungguKonfirmasi = await prisma.pemesanans.count({
+    where: {
+      status_pesan: "MenungguKonfirmasi",
+    },
+  });
+  const totalPemesananMenungguKurir = await prisma.pemesanans.count({
+    where: {
+      status_pesan: "MenungguKurir",
+    },
+  });
 
   const totalPemesananSedangDiproses = await prisma.pemesanans.count({
     where: { status_pesan: "SedangDiproses" },
@@ -52,6 +62,8 @@ export async function getDashboardStats() {
 
   return {
     totalPemesanan,
+    totalPemesananMenungguKonfirmasi,
+    totalPemesananMenungguKurir,
     totalPemesananMenunggu,
     totalPemesananSedangDiproses,
     totalPemesananSelesai,
@@ -108,7 +120,7 @@ export async function getPemesanan() {
       pelanggan: true,
     },
     orderBy: {
-      updated_at: "desc",
+      created_at: "desc",
     },
   });
 }

@@ -82,7 +82,7 @@ export function MonitoringPesananDialog({ data }: Props) {
           </div>
           <div>
             {/* Bukti Kirim */}
-            {pengiriman.bukti_foto && (
+            {pengiriman?.bukti_foto ? (
               <div className="mt-3">
                 <p className="font-medium mb-1">Bukti Kirim:</p>
                 <Image
@@ -92,6 +92,13 @@ export function MonitoringPesananDialog({ data }: Props) {
                   width={160}
                   height={160}
                 />
+              </div>
+            ) : (
+              <div className="mt-3">
+                <p className="font-medium mb-1">Bukti kirim:</p>
+                <p className="mb-1 italic text-muted-foreground">
+                  Belum ada bukti yang diupload
+                </p>
               </div>
             )}
           </div>

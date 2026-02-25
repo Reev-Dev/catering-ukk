@@ -1,6 +1,6 @@
 import { getDashboardStats } from "@/app/actions/dashboard";
 import { DashboardStatCard } from "@/components/dashboard/card/dashboard-stat";
-import PesananTable from "@/components/dashboard/table-column/monitoring-pesanan/monitoring-pesanan-table";
+import MonitoringPesananTable from "@/components/dashboard/table-column/monitoring-pesanan/monitoring-pesanan-table";
 import { API_URL } from "@/lib/api";
 import {
   AlarmClock,
@@ -54,7 +54,7 @@ export default async function MonitoringPesananOwner() {
           color="blue"
         />
       </div>
-      <PesananTable initialData={data} />
+      <MonitoringPesananTable initialData={data} />
     </div>
   );
 }

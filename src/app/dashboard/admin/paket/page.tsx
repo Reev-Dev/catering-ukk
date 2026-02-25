@@ -1,7 +1,9 @@
+import { getPaket } from "@/app/actions/paket";
+import { DashboardStatCard } from "@/components/dashboard/card/dashboard-stat";
 import PaketTable from "@/components/dashboard/table-column/paket-table";
 import { Button } from "@/components/ui/button";
 import { Paket } from "@/types/data/paket";
-import { PlusIcon } from "lucide-react";
+import { Box, PlusIcon, Utensils, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 async function getData(): Promise<Paket[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -18,9 +20,32 @@ async function getData(): Promise<Paket[]> {
 
 export default async function PaketPage() {
   const data = await getData();
+  const dataPaket = await getPaket();
 
   return (
     <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-4">
+        <DashboardStatCard
+          title="Total Paket"
+          value={dataPaket.totalPaket}
+          icon={Utensils}
+          color="yellow"
+        />
+
+        <DashboardStatCard
+          title="Total Prasmanan"
+          value={dataPaket.totalPrasmanan}
+          icon={UtensilsCrossed}
+          color="green"
+        />
+
+        <DashboardStatCard
+          title="Total Box"
+          value={dataPaket.totalBox}
+          icon={Box}
+          color="blue"
+        />
+      </div>
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Data Paket</h1>
         <Button

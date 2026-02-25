@@ -24,15 +24,24 @@ export default function kurirColumns(): ColumnDef<User>[] {
       id: "status",
       header: "Status",
       cell: ({ row }) => {
-        if (
-          !row.original.pengirimans ||
-          row.original.pengirimans.length === 0
-        ) {
-          const status = "Tidak sedang melakukan pengiriman";
-          return <span className="font-medium text-xs text-muted-foreground">{status}</span>;
+        const pengirimans = row.original.pengirimans || [];
+
+        const sedangDikirim = pengirimans.some(
+          (p) => p.status_kirim === "SedangDikirim",
+        );
+
+        if (sedangDikirim) {
+          return (
+            <Badge variant="blue" className="font-medium">
+              Sedang melakukan pengiriman
+            </Badge>
+          );
         }
+
         return (
-          <Badge variant="blue" className="font-medium">Sedang melakukan pengiriman</Badge>
+          <span className="font-medium text-xs text-muted-foreground">
+            Tidak sedang melakukan pengiriman
+          </span>
         );
       },
     },
